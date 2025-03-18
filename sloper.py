@@ -1,6 +1,6 @@
 from data_scrapper import get_last_period
 import numpy as np 
-from PyEMD import EEMD, CEEMDAN
+from PyEMD import CEEMDAN
 
 def decompose(data_sample: np.array, delay: int=0) -> np.array:
     ''' function for decompose signal by the
@@ -61,7 +61,7 @@ def get_slope(dc: np.array, derdc: np.array) -> float:
   return slope
 
 
-def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_price'):
+def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    '''
    '''
 
@@ -74,3 +74,7 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_price'):
    # normalize slope value between [-1 , 1]
 
    return slope
+
+
+sl = get_data_slope('audchf')
+print(f'Current price slope: {sl}')

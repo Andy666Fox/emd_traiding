@@ -8,4 +8,7 @@ dependencies = [
     "emd-signal>=1.6.4",
     "logger>=1.4",
     "pandas>=2.2.3",
+    "requests>=2.32.3",
+    "websocket>=0.2.1",
+    "websocket-client>=1.8.0",
 ]
