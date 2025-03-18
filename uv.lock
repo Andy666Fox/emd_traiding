@@ -131,24 +131,7 @@ wheels = [
 ]
 
 [[package]]
-name = "emd-signal"
-version = "1.6.4"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "numpy", version = "2.2.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "pathos" },
-    { name = "scipy", version = "1.13.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "scipy", version = "1.15.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "tqdm" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ca/de/4431a31e90437c0328fe4fa75561e025216fafaa828dd5ba36f514f96f88/emd_signal-1.6.4.tar.gz", hash = "sha256:3247f8931e4a0b615c92d0b15ebda68cdcad45f1985cde66e2be22dd3f2a3519", size = 72524 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/15/06/093411da34764eb311f309138e702c2fbe957daf2a0edcbd8fc7f7586988/EMD_signal-1.6.4-py3-none-any.whl", hash = "sha256:5d6de21473e9f3f0d7c7c5ec763ebee609c9c83236ac82c3ebc28a6c51745338", size = 75595 },
-]
-
-[[package]]
-name = "emd-traiding"
+name = "emd-imf-traiding"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
@@ -168,6 +151,23 @@ requires-dist = [
     { name = "requests", specifier = ">=2.32.3" },
     { name = "websocket", specifier = ">=0.2.1" },
     { name = "websocket-client", specifier = ">=1.8.0" },
+]
+
+[[package]]
+name = "emd-signal"
+version = "1.6.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "numpy", version = "2.2.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "pathos" },
+    { name = "scipy", version = "1.13.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "scipy", version = "1.15.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ca/de/4431a31e90437c0328fe4fa75561e025216fafaa828dd5ba36f514f96f88/emd_signal-1.6.4.tar.gz", hash = "sha256:3247f8931e4a0b615c92d0b15ebda68cdcad45f1985cde66e2be22dd3f2a3519", size = 72524 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/15/06/093411da34764eb311f309138e702c2fbe957daf2a0edcbd8fc7f7586988/EMD_signal-1.6.4-py3-none-any.whl", hash = "sha256:5d6de21473e9f3f0d7c7c5ec763ebee609c9c83236ac82c3ebc28a6c51745338", size = 75595 },
 ]
 
 [[package]]

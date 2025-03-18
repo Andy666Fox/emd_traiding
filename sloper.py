@@ -52,6 +52,21 @@ def get_slope(dc: np.array, derdc: np.array) -> float:
   sx2 = len(derdc)
   sy2 = derdc[-1]
 
+  arr = np.array([[fx1, fy1, fx2, fy2],
+                  [sx1, sy1, sx2, sy2]])
+  norm = np.linalg.norm(arr)
+  arr = arr / norm
+
+  fx1 = arr[0][0]
+  fy1 = arr[0][1]
+  fx2 = arr[0][2]
+  fy2 = arr[0][3]
+
+  sx1 = arr[1][0]
+  sy1 = arr[1][1]
+  sx2 = arr[1][2]
+  sy2 = arr[1][3] 
+
   m1 = (fy2 - fy1) / (fx2 - fx1)
   m2 = (sy2 - sy1) / (sx2 - sx1)
 
@@ -59,7 +74,6 @@ def get_slope(dc: np.array, derdc: np.array) -> float:
 
 
   return slope
-
 
 def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    '''
@@ -69,12 +83,15 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    dc, _ = decompose(data[col])
    dc_derivative = np.gradient(dc[imf_level])
 
-   scale_coef = (dc[imf_level][-1] / dc_derivative[-1]) / 10
-   slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:]*scale_coef)
+   #scale_coef = (dc[imf_level][-1] / dc_derivative[-1]) / 10
+   slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:])
    # normalize slope value between [-1 , 1]
 
-   return slope
+   return slope, data.index[-1], data[col][-1]
 
 
-sl = get_data_slope('audchf')
-print(f'Current price slope: {sl}')
+smbls = ['eurusd', 'audchf', 'btcusdt', 'audjpy', 'euraud']
+
+for symbol in smbls:
+   s, t, p = get_data_slope(symbol, 300, '1H')
+   print(f'Symbol: {symbol} | Slope: {s:.5f} | Time: {t} | Current Price: {p}')

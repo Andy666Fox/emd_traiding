@@ -1,7 +1,7 @@
 [project]
-name = "emd-traiding"
+name = "emd-imf-traiding"
 version = "0.1.0"
-description = "Add your description here"
+description = "Computes the Complete Ensemble Empirical Mode Decomposition (CEEMDAN) of price data"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
