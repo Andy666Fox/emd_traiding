@@ -9,4 +9,5 @@ dependencies = [
     "logger>=1.4",
     "pandas>=2.2.3",
     "pandas-ta>=0.3.14b0",
+    "price_loaders"
 ]
