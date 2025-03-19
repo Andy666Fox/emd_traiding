@@ -83,15 +83,12 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    dc, _ = decompose(data[col])
    dc_derivative = np.gradient(dc[imf_level])
 
-   #scale_coef = (dc[imf_level][-1] / dc_derivative[-1]) / 10
-   slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:])
+   scale_coef = (dc[imf_level][-1] / dc_derivative[-1]) / 10
+   slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:]) * scale_coef
    # normalize slope value between [-1 , 1]
 
-   return slope, data.index[-1], data[col][-1]
+   return slope
 
 
-smbls = ['eurusd', 'audchf', 'btcusdt', 'audjpy', 'euraud']
-
-for symbol in smbls:
-   s, t, p = get_data_slope(symbol, 300, '1H')
-   print(f'Symbol: {symbol} | Slope: {s:.5f} | Time: {t} | Current Price: {p}')
+s = get_data_slope('euraud', 200, 1)
+print(f'Slope: {s:.5f}')
