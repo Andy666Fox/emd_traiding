@@ -89,6 +89,7 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
 
    return slope
 
-
-s = get_data_slope('euraud', 200, 1)
-print(f'Slope: {s:.5f}')
+symbols = ['audchf']
+for f in symbols:
+  s = get_data_slope(f, 1000, 1)
+  print(f'{f.upper()} | Slope: {s:.5f}')
