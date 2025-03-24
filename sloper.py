@@ -1,6 +1,7 @@
 from data_scrapper import get_last_period
 import numpy as np 
 from PyEMD import CEEMDAN
+from sklearn.preprocessing import normalize
 
 def decompose(data_sample: np.array, delay: int=0) -> np.array:
     ''' function for decompose signal by the
@@ -80,16 +81,18 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    '''
 
    data = get_last_period(symbol=symbol, period=period, tf=tf)
+   data[col] = normalize(np.array(data[col]).reshape(1, -1)).reshape(-1, 1)
    dc, _ = decompose(data[col])
    dc_derivative = np.gradient(dc[imf_level])
 
-   scale_coef = (dc[imf_level][-1] / dc_derivative[-1]) / 10
+   scale_coef = (dc[imf_level][-1] / dc_derivative[-1])
    slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:]) * scale_coef
+   der_slope = (dc_derivative[-1] - dc_derivative[-2]) * 1e7
    # normalize slope value between [-1 , 1]
 
-   return slope
+   return slope, der_slope
 
-symbols = ['audchf']
+symbols = ['audcad', 'audjpy', 'chfjpy', 'eurusd', 'gbpjpy', 'cadjpy', 'eurcad']
 for f in symbols:
-  s = get_data_slope(f, 1000, 1)
-  print(f'{f.upper()} | Slope: {s:.5f}')
+  s, der_slope = get_data_slope(f, 200, 1)
+  print(f'{f.upper()} | Slope: {s:.5f} | DERSLOPE: {der_slope}')

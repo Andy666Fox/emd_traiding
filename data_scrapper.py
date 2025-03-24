@@ -9,7 +9,7 @@ filterwarnings('ignore')
 features = ['Max_Price', 'Min_Price', 'Open_price', 'Close_Price']
 
 
-def get_last_period(symbol, period, tf, to_csv=True):
+def get_last_period(symbol, period, tf, to_csv=False):
     logger.info('Try to access tradingview...')
 
     df = load_asset_price(symbol, period, str(tf), pytz.timezone('UTC'))
