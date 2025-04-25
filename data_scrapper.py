@@ -6,7 +6,7 @@ from warnings import filterwarnings
 from logger import logger 
 filterwarnings('ignore')
 
-features = ['Max_Price', 'Min_Price', 'Open_price', 'Close_Price']
+#features = ['Max_Price', 'Min_Price', 'Open_price', 'Close_Price']
 
 
 def get_last_period(symbol: str, period: int, tf: int, to_csv=False):
