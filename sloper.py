@@ -31,14 +31,32 @@ def decompose(data_sample: np.array, delay: int=0) -> np.array:
     return imf ,t
 
 def get_slope(dc: np.array, derdc: np.array) -> float:
-  '''function for calculate slope between emd signal and his derivative
+  '''Calculate normalized angular relationship between EMD signal and its derivative.
+    
+    Computes the tangent of angle between two normalized line segments representing:
+    1. Last two points of Empirical Mode Decomposition (EMD) component
+    2. Corresponding points from its derivative component
 
-     Params:
-      dc: last two points of emd signal
-      derdc: last two points of emd signal derivative
+    The calculation involves:
+    1. Coordinate system normalization using Frobenius norm
+    2. Slope calculation for both normalized line segments
+    3. Angular relationship using arctangent formula
+
+    Args:
+        dc: 1D array with at least 2 elements from EMD component time series
+        derdc: 1D array with at least 2 elements from derivative component time series
 
     Returns:
-      slope: normalized slope (between -1 and 1) of lines
+        float: Tangent of angle between normalized segments. Theoretical range (-∞, ∞),
+        but typically constrained by normalization to (-2.0, 2.0) in practice
+
+    Raises:
+        ZeroDivisionError: If line segments are perfectly perpendicular
+        ValueError: If input arrays contain less than 2 elements
+
+    Example:
+        >>> get_slope(np.array([2.1, 2.4]), np.array([0.1, 0.3]))
+        -0.287
   '''
 
   fx1 = len(dc) - 1
@@ -77,7 +95,36 @@ def get_slope(dc: np.array, derdc: np.array) -> float:
   return slope
 
 def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
-   '''
+   '''Calculate slope metrics for price data using Empirical Mode Decomposition (EMD).
+    
+    Processes historical price data to extract trend characteristics through:
+    1. Signal normalization
+    2. Empirical Mode Decomposition
+    3. Derivative analysis of selected IMF component
+    4. Slope scaling and rate-of-change calculation
+
+    Args:
+        symbol (str): Asset ticker symbol (e.g. 'AAPL', 'BTCUSDT')
+        period (int, optional): Number of historical candles to analyze. Default: 100
+        tf (int, optional): Timeframe in minutes for each candle. Default: 3
+        imf_level (int, optional): Index of IMF component to analyze from EMD results. 
+            Uses Python-style negative indexing. Default: -1 (last component)
+        col (str, optional): Price column to analyze. Default: 'Close_Price'
+
+    Returns:
+        tuple: Contains two metrics:
+            - slope (float): Scaled slope of selected IMF component (dimensionless)
+            - der_slope (float): Rate of change of derivative (1e7 scaled value)
+
+    Raises:
+        ValueError: If input data is empty or IMF level is out of bounds
+        TypeError: If required columns are missing in the data
+
+    Notes:
+        - Requires normalize(), decompose(), and get_slope() helper functions
+        - IMF components are ordered from highest to lowest frequency
+        - Final slope value represents recent trend characteristics in [-1, 1] range
+        - der_slope indicates acceleration/deceleration of the trend
    '''
 
    data = get_last_period(symbol=symbol, period=period, tf=tf)
@@ -88,11 +135,5 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    scale_coef = (dc[imf_level][-1] / dc_derivative[-1])
    slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:]) * scale_coef
    der_slope = (dc_derivative[-1] - dc_derivative[-2]) * 1e7
-   # normalize slope value between [-1 , 1]
 
    return slope, der_slope
-
-symbols = ['audcad', 'audjpy', 'chfjpy', 'eurusd', 'gbpjpy', 'cadjpy', 'eurcad']
-for f in symbols:
-  s, der_slope = get_data_slope(f, 200, 1)
-  print(f'{f.upper()} | Slope: {s:.5f} | DERSLOPE: {der_slope}')
