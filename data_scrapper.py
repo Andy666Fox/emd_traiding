@@ -9,7 +9,16 @@ filterwarnings('ignore')
 features = ['Max_Price', 'Min_Price', 'Open_price', 'Close_Price']
 
 
-def get_last_period(symbol, period, tf, to_csv=False):
+def get_last_period(symbol: str, period: int, tf: int, to_csv=False):
+    '''Get a csv file with data of the specified symbol for a certain period
+    
+    symbol: Stock data short symbol ('AAPL', 'BTCUSDT')
+    period: Specify the candles count
+    tf: Candle timeframe
+
+    Returns:
+    df: pandas dataframe with loaded symbol data
+    '''
     logger.info('Try to access tradingview...')
 
     df = load_asset_price(symbol, period, str(tf), pytz.timezone('UTC'))
