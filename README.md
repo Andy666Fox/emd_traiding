@@ -5,8 +5,7 @@
 
 ## **Quick Start**
 1. Clone the repo
-2. check and install requiered dependencies
-`uv pip install -r requierements.txt`
+2. check and install requiered dependencies (*libs in pyproject.toml*)
 3. last step - call the **get_data_slope** func with necessary stock symbol
 `get_data_slope('BTCUSDT')`
 
