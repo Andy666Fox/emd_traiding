@@ -1,9 +1,13 @@
 import streamlit as st
 import requests
 
+from ui_mk import TICKETS_SLIDER
+
 API_BASE_URL = "http://localhost:8000"
 
 st.title("EMD Slope Analysis")
+
+st.markdown(TICKETS_SLIDER, unsafe_allow_html=True)
 
 ticket = st.text_input('Ticket:', placeholder='BTCUSDT for example')
 if st.button('Get Slope'):
