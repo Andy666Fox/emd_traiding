@@ -156,3 +156,6 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    der_slope = (dc_derivative[-1] - dc_derivative[-2]) * 1e7
 
    return slope, der_slope
+
+
+print(get_data_slope('BTCUSDT'))
