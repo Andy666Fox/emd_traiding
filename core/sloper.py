@@ -1,4 +1,4 @@
-from data_scrapper import get_last_period
+from core.data_scrapper import get_last_period
 import numpy as np 
 from PyEMD import CEEMDAN
 from sklearn.preprocessing import normalize
