@@ -10,6 +10,7 @@ st.title("EMD Slope Analysis")
 st.markdown(TICKETS_SLIDER, unsafe_allow_html=True)
 
 ticket = st.text_input('Ticket:', placeholder='BTCUSDT for example')
+
 if st.button('Get Slope'):
     if ticket:
         with st.spinner(f'Data for {ticket} is loading ...'): 

@@ -30,7 +30,7 @@
 
 5. For personal use you can raise *streamlit web interface*
 
-    ```python ui/ui_main.py```
+    ```streamlit run ui/ui_main.py```
     ![alt text](assets/image.png)
 
 

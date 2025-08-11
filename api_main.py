@@ -16,7 +16,7 @@ app = FastAPI(
 async def root():
     return {"message": app.description, "version": app.version}
 
-@app.get("/get_slope/{ticket}", response_model=SlopeResponse)
+@app.get("/get_slope_of/{ticket}", response_model=SlopeResponse)
 async def get_slope(ticket: str):
     try:
         result = get_data_slope(ticket)
