@@ -50,66 +50,55 @@ def decompose(data_sample: np.array, delay: int=0) -> np.array:
     return imf ,t
 
 def get_slope(dc: np.array, derdc: np.array) -> float:
-  '''Calculate normalized angular relationship between EMD signal and its derivative.
+  '''Calculate scale-invariant angular relationship between EMD signal and derivative trends.
     
-    Computes the tangent of angle between two normalized line segments representing:
-    1. Last two points of Empirical Mode Decomposition (EMD) component
-    2. Corresponding points from its derivative component
-
-    The calculation involves:
-    1. Coordinate system normalization using Frobenius norm
-    2. Slope calculation for both normalized line segments
-    3. Angular relationship using arctangent formula
+    Computes the tangent of the angle between two line segments formed by the last 
+    two points of each input array. Each segment is independently normalized to unit 
+    length before slope calculation, making the result invariant to the absolute 
+    scales of the input signals.
+    
+    
+    Algorithm steps:
+    1. Extract last two points from each array as separate segments
+    2. Normalize each segment independently to unit vector length
+    3. Calculate directional slopes of normalized segments
+    4. Apply arctangent difference formula: (m1 - m2) / (1 + m1*m2)
 
     Args:
-        dc: 1D array with at least 2 elements from EMD component time series
-        derdc: 1D array with at least 2 elements from derivative component time series
-
+        dc (np.array): EMD component time series, must have at least 2 elements
+        derdc (np.array): Derivative component time series, must have at least 2 elements
+    
     Returns:
-        float: Tangent of angle between normalized segments. Theoretical range (-∞, ∞),
-        but typically constrained by normalization to (-2.0, 2.0) in practice
-
+        float: Tangent of angle between normalized direction vectors.
+               Range: (-∞, ∞), but typically bounded due to normalization constraints.
+               Values closer to 0 indicate similar directions of change.
+    
     Raises:
-        ZeroDivisionError: If line segments are perfectly perpendicular
-        ValueError: If input arrays contain less than 2 elements
-
-    Example:
-        >>> get_slope(np.array([2.1, 2.4]), np.array([0.1, 0.3]))
-        -0.287
+        ZeroDivisionError: When normalized segments are perpendicular 
+                          (denominator |1 + m1*m2| < 1e-10)
+        ValueError: When either input array has fewer than 2 elements
+        RuntimeWarning: When input segments have zero magnitude (constant values)
+    
+        
+        The result represents the angular relationship between the normalized 
+        direction vectors, independent of their original magnitudes.
   '''
 
-  fx1 = len(dc) - 1
-  fy1 = dc[-2]
+  seq1 = np.array([dc[-2], dc[-1]])
+  seq2 = np.array([derdc[-2], derdc[-1]])
 
-  fx2 = len(dc)
-  fy2 = dc[-1]
+  seq1_norm = seq1 / np.linalg.norm(seq1)
+  seq2_norm = seq2 / np.linalg.norm(seq2)
 
-  sx1 = len(derdc) - 1
-  sy1 = derdc[-2]
+  m1 = seq1_norm[1] - seq1_norm[0]
+  m2 = seq2_norm[1] - seq2_norm[0]
 
-  sx2 = len(derdc)
-  sy2 = derdc[-1]
+  denominator = 1 + m1 * m2
 
-  arr = np.array([[fx1, fy1, fx2, fy2],
-                  [sx1, sy1, sx2, sy2]])
-  norm = np.linalg.norm(arr)
-  arr = arr / norm
+  if abs(denominator) < 1e-10:
+     raise ZeroDivisionError('Segments are perpendicular')
 
-  fx1 = arr[0][0]
-  fy1 = arr[0][1]
-  fx2 = arr[0][2]
-  fy2 = arr[0][3]
-
-  sx1 = arr[1][0]
-  sy1 = arr[1][1]
-  sx2 = arr[1][2]
-  sy2 = arr[1][3] 
-
-  m1 = (fy2 - fy1) / (fx2 - fx1)
-  m2 = (sy2 - sy1) / (sx2 - sx1)
-
-  slope = (m1 - m2) / (1 + m1*m2)
-
+  slope = (m1 - m2) / denominator
 
   return slope
 
@@ -117,42 +106,33 @@ def get_data_slope(symbol, period=100, tf=3, imf_level=-1, col='Close_Price'):
    '''Calculate slope metrics for price data using Empirical Mode Decomposition (EMD).
     
     Processes historical price data to extract trend characteristics through:
-    1. Signal normalization
-    2. Empirical Mode Decomposition
+    1. Data normalization (standardization)
+    2. Empirical Mode Decomposition to extract trend components
     3. Derivative analysis of selected IMF component
-    4. Slope scaling and rate-of-change calculation
-
+    4. Angular relationship analysis between signal and its derivative
+    
     Args:
         symbol (str): Asset ticker symbol (e.g. 'AAPL', 'BTCUSDT')
         period (int, optional): Number of historical candles to analyze. Default: 100
         tf (int, optional): Timeframe in minutes for each candle. Default: 3
         imf_level (int, optional): Index of IMF component to analyze from EMD results. 
-            Uses Python-style negative indexing. Default: -1 (last component)
         col (str, optional): Price column to analyze. Default: 'Close_Price'
-
+    
     Returns:
         tuple: Contains two metrics:
-            - slope (float): Scaled slope of selected IMF component (dimensionless)
-            - der_slope (float): Rate of change of derivative (1e7 scaled value)
-
-    Raises:
-        ValueError: If input data is empty or IMF level is out of bounds
-        TypeError: If required columns are missing in the data
-
-    Notes:
-        - Requires normalize(), decompose(), and get_slope() helper functions
-        - IMF components are ordered from highest to lowest frequency
-        - Final slope value represents recent trend characteristics in [-1, 1] range
-        - der_slope indicates acceleration/deceleration of the trend
+            - slope (float): Angular relationship between IMF and its derivative
+            - trend_acceleration (float): Normalized acceleration of the trend
    '''
 
    data = get_last_period(symbol=symbol, period=period, tf=tf)
-   data[col] = normalize(np.array(data[col]).reshape(1, -1)).reshape(-1, 1)
-   dc, _ = decompose(data[col])
+   data_for_decompose = normalize(np.array(data[col]).reshape(1, -1))[0]
+   dc, _ = decompose(data_for_decompose)
    dc_derivative = np.gradient(dc[imf_level])
 
-   scale_coef = (dc[imf_level][-1] / dc_derivative[-1])
-   slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:]) * scale_coef
-   der_slope = (dc_derivative[-1] - dc_derivative[-2]) * 1e7
+   slope = get_slope(dc[imf_level][-2:], dc_derivative[-2:])
 
-   return slope, der_slope
+   second_derivative = np.gradient(dc_derivative)
+   derivative_scale = np.std(dc_derivative) if np.std(dc_derivative) > 1e-10 else 1.0
+   trend_acc = second_derivative[-1] / derivative_scale
+
+   return slope, trend_acc
