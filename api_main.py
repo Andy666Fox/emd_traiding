@@ -20,17 +20,18 @@ async def root():
 async def get_slope(ticket: str):
     try:
         result = get_data_slope(ticket)
-        return SlopeResponse(
-            ticket=ticket, 
-            slope=result[0], 
-            dslope=result[1],
-            status='200')
+        return {
+            "ticket":ticket, 
+            "slope":result[0], 
+            "dslope":result[1],
+            "status":'200'}
     except Exception as e:
-        return SlopeResponse(
-            ticket=str(ticket), 
-            slope=None,dslope=None, 
-            status='400',
-            message='Invalid ticket name')
+        return {
+            "ticket":str(ticket), 
+            "slope":None,
+            "dslope":None, 
+            "status":'400',
+            "message":'Invalid ticket name'}
     
 if __name__ == "__main__":
     import uvicorn
