@@ -13,11 +13,11 @@ app = FastAPI(
 )
 
 @app.get("/")
-async def root():
+def root():
     return {"message": app.description, "version": app.version}
 
 @app.get("/get_slope_of/{ticket}", response_model=SlopeResponse)
-async def get_slope(ticket: str):
+def get_slope(ticket: str):
     try:
         result = get_data_slope(ticket)
         return {
