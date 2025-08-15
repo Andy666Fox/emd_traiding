@@ -1,6 +1,4 @@
-from fastapi import FastAPI, HTTPException
-import sys 
-import os 
+from fastapi import FastAPI
 
 from core.sloper import get_data_slope
 from api.models import SlopeResponse
