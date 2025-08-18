@@ -19,4 +19,4 @@ if st.button('Get Slope'):
             st.success('**RESULTS**')
             st.write(result)
     else:
-        st.warning('Ticket field is empty blya')
+        st.warning('Ticket field is empty')
