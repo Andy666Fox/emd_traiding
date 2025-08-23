@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-from ui_mk import TICKETS_SLIDER
+from ui_mk import TICKETS_SLIDER # todo html/css templates
 
 API_BASE_URL = "http://localhost:8000"
 
