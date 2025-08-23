@@ -2,9 +2,9 @@
 
 ## **About**
 ## <p>This method based on decomposing signal (natural analog signals or artificial stock pricing in that case) into **Intrinsic Mode Functions** (IMF)</p>
-
+---
 ![alt text](assets/schema.png)
-
+---
 ## **Quick Start**
 1. Clone the repo
 
@@ -19,7 +19,7 @@
 
     ```get_data_slope("BTCUSDT")```
 
-
+---
 ## Features
 1. Easy data loading
 2. Ability to customize IMF level
