@@ -10,6 +10,7 @@
 
     ```git clone https://github.com/Andy666Fox/emd_traiding.git```
 
+
 2. Check and install requiered dependencies 
 
     ```uv/pip install -r requirements.txt```
