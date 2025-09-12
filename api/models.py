@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-# Basic http request model
+# Basic http response model
 class SlopeResponse(BaseModel):
     ticket: str
     slope: float | None
@@ -9,5 +9,6 @@ class SlopeResponse(BaseModel):
     message: str = None
 
 
+# Basic http request model
 class SlopeRequest(BaseModel):
     ticket: str
