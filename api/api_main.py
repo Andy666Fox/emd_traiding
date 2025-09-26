@@ -30,6 +30,10 @@ def get_slope(ticket: str):
             "status": "400",
             "message": "Invalid ticket name",
         }
+    
+@app.get('/health')
+def health_check():
+    return {"status": "healthy"}
 
 
 if __name__ == "__main__":
