@@ -5,6 +5,8 @@
 ---
 ![alt text](assets/schema.png)
 ---
+![alt text](assets/demo.png)
+---
 ## **Quick Start**
 1. Clone the repo
 
@@ -19,23 +21,20 @@
 4. Entry point is *get_data_slope()* function with ticket argument
 
     ```get_data_slope("BTCUSDT")```
+---
+## Docker
+### It's possible to run it in Docker. I spent a lot of time unifying the configurations, so just run 
 
+### `docker compose up -d --build`
+
+### The UI will be available at `localhost:80`, the address for the API is `localhost:80/api`
+
+### If that doesn't work, the source code includes nginx configs and the configuration for each service. There's nothing particularly buggy there, so I'm almost certain everything will run without a hitch.
 ---
 ## Features
 1. Easy data loading
 2. Ability to customize IMF level
 3. A negative slope value indicates a downward price movement, and the opposite is also true.
-4. Now you can raise a simple fastapi application for convenient api requests if you want to use the functionality in your services.
-
-    ```python api_main.py```
-
-5. For personal use you can raise *streamlit web interface*
-
-    ```streamlit run ui/ui_main.py```
-    ![alt text](assets/image.png)
-
-
-
-
+---
 ### EMD on [wiki](https://ru.wikipedia.org/wiki/Empirical_Mode_Decomposition)
 ### EMD python [library](https://pyemd.readthedocs.io/en/latest/emd.html) 

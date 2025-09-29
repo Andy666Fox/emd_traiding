@@ -32,3 +32,24 @@ TICKETS_SLIDER = """
     </div>
 </div>
 """
+
+
+CARD_STYLE = '''<div style="
+            border: 2px solid #451818;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #6f86a8 0%, #1d7f8a 100%);
+        ">
+            <h3>{} {}</h3>
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <strong>Slope:</strong> {:.6f}<br>
+                    <strong>Derivation:</strong> {:.6f}
+                </div>
+                <div>
+                    <strong>Trend:</strong> {}<br>
+                    <strong>Strength:</strong> {}
+                </div>
+            </div>
+        </div>'''

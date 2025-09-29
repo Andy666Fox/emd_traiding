@@ -3,6 +3,7 @@ import requests
 import os 
 
 from ui_mk import TICKETS_SLIDER # todo html/css templates
+from ui_card import display_card, format_data
 
 API_BASE_URL = os.getenv("API_BASE_URL", "/api")
 
@@ -18,6 +19,7 @@ if st.button("Get Slope"):
             response = requests.get(f"{API_BASE_URL}/get_slope_of/{ticket.upper()}")
             result = response.json()
             st.success("**RESULTS**")
+            display_card(result)
             st.write(result)
     else:
         st.warning("Ticket field is empty")
