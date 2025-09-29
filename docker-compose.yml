@@ -29,7 +29,7 @@ services:
     expose:
      - "8501"
     environment:
-      - API_BASE_URL=/api
+      - API_BASE_URL=http://api:8000
     depends_on:
       api:
         condition: service_healthy

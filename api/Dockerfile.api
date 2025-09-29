@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY  api_reqs.txt .
+COPY api_reqs.txt .
 RUN pip install --no-cache-dir --user -r api_reqs.txt
 
 FROM python:3.11-slim
@@ -28,7 +28,6 @@ RUN chown -R appuser:appgroup /app
 
 USER appuser
 
-
 ENV PATH=/home/appuser/.local/bin:$PATH
 
 # Переменные окружения для работы за прокси
@@ -36,10 +35,9 @@ ENV HOST=0.0.0.0
 ENV PORT=8000
 ENV ROOT_PATH=""
 
-EXPOSE 8000 
+EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-
-CMD ["uvicorn", "api_main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]
+CMD ["python3", "api_main.py"]

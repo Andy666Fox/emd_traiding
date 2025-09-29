@@ -14,8 +14,8 @@ ticket = st.text_input("Ticket:", placeholder="BTCUSDT for example")
 
 if st.button("Get Slope"):
     if ticket:
-        with st.spinner(f"Data for {ticket} is loading ..."):
-            response = requests.get(f"{API_BASE_URL}/get_slope/{ticket.upper()}")
+        with st.spinner(f"Data for {ticket.upper()} is loading ..."):
+            response = requests.get(f"{API_BASE_URL}/get_slope_of/{ticket.upper()}")
             result = response.json()
             st.success("**RESULTS**")
             st.write(result)
@@ -23,7 +23,7 @@ if st.button("Get Slope"):
         st.warning("Ticket field is empty")
 
 with st.sidebar:
-    st.info(f"API_URL: {API_BASE_URL}")
+    st.info(f"API Parameters")
     if st.button("Check api status"):
         try:
             response = requests.get(f"{API_BASE_URL}/health")

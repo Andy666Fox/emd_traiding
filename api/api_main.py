@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from core.sloper import get_data_slope
-from api.models import SlopeResponse
+from sloper import get_data_slope
+from models import SlopeResponse
 
 import os
 
@@ -43,6 +43,6 @@ def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    host = os.getenv("HOST", "0.0.0.0")
+    host = os.getenv("HOST", "localhost")
     port = int(os.getenv("PORT", 8000))
     uvicorn.run(app, host=host, port=port, log_level="info")
