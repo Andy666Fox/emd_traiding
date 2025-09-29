@@ -1,1 +1,45 @@
-FROM baseImage
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    curl \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY  api_reqs.txt .
+RUN pip install --no-cache-dir --user -r api_reqs.txt
+
+FROM python:3.11-slim
+
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /root/.local /home/appuser/.local
+
+# Копируем код приложения
+COPY . .
+
+RUN chown -R appuser:appgroup /app
+
+USER appuser
+
+
+ENV PATH=/home/appuser/.local/bin:$PATH
+
+# Переменные окружения для работы за прокси
+ENV HOST=0.0.0.0
+ENV PORT=8000
+ENV ROOT_PATH=""
+
+EXPOSE 8000 
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+
+CMD ["uvicorn", "api_main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]

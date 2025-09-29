@@ -1,9 +1,10 @@
 import streamlit as st
 import requests
+import os 
 
 from ui_mk import TICKETS_SLIDER # todo html/css templates
 
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", "/api")
 
 st.title("EMD Slope Analysis")
 
@@ -20,3 +21,17 @@ if st.button("Get Slope"):
             st.write(result)
     else:
         st.warning("Ticket field is empty")
+
+with st.sidebar:
+    st.info(f"API_URL: {API_BASE_URL}")
+    if st.button("Check api status"):
+        try:
+            response = requests.get(f"{API_BASE_URL}/health")
+            if response.status_code == 200:
+                st.success('Api is healthy')
+            else:
+                st.error("Api is not responding")
+        except:
+            st.error('Cannot connect to Api')
+
+

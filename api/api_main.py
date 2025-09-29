@@ -3,8 +3,13 @@ from fastapi import FastAPI
 from core.sloper import get_data_slope
 from api.models import SlopeResponse
 
+import os
 
-app = FastAPI(title="EMD trading API", description="EMD trading API", version="1.0.0")
+
+app = FastAPI(title="EMD trading API", 
+              description="EMD trading API", 
+              version="1.0.0",
+              root_path=os.getenv("ROOT_PATH", ""))
 
 
 @app.get("/")
@@ -38,4 +43,6 @@ def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="localhost", port=8000)
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host=host, port=port, log_level="info")
